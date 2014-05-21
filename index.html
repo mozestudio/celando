@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="vendor/jquery-2.1.1.js"></script>
+    <script src="vendor/jquery-easing-1.3.js"></script>
+    <script src="src/jquery.celando.js"></script>
+    <style>
+      body {
+        font-size: 15px;
+        line-height: 1.5em;
+        font-family: "Omnes", "omnes-pro", sans-serif;
+        background: #e8ebf2;
+        width: 99%;
+      }
+
+      #list2 .title h1 {
+        display: inline-block;
+      }
+
+      #list2 .title a {
+        float: right;
+        margin-top: 20px;
+      }
+
+      #list2 ul {
+        margin-top: -16px;
+      }
+
+      #paragraph1 p a {
+        float: right;
+      }
+
+      li.hide,
+      p.hide {
+        display: none;
+      }
+
+      #list3 a {
+        float: left;
+        background-image: -webkit-linear-gradient(bottom, red 0%, rgba(255, 255, 255, 0) 100%);
+        background-image: linear-gradient(to top, red 0%, rgba(255, 255, 255, 0) 100%);
+        height: 30px;
+        width: 100%;
+        text-align: center;
+        color: #000;
+        text-decoration: none;
+        margin-top: -25px;
+      }
+
+      .list, .paragraph {
+        float: left;
+        border: 1px solid black;
+        width: 300px;
+        min-height: 180px;
+        padding: 5px;
+        margin-right: 10px;
+        word-wrap: break-word;
+      }
+    </style>
+    <script>
+      function initExamples() {
+        var li = $('.list > ul');
+        var t  = li.html();
+        for(var i = 0; i < 100; ++i)
+          $('ul').append(t);
+
+        var p = $('.paragraph > p');
+            t = p.html();
+        for(var i = 0; i < 150; ++i)
+          p.append(t);
+      }
+
+      $(document).ready(function() {
+        initExamples();
+
+        var list = $('#list1 > ul').children('li');
+        $.celando(list);
+
+        list = $('#list2 > ul').children('li');
+        $.celando(list, {
+          $toggleButtonPos: $('#list2 > .title'),
+          numItems: 10
+        });
+
+        list = $('#list3 > ul').children('li');
+        $.celando(list, {
+          $toggleButton: $('#list3 > .more-toggle'),
+          label: { more: 'MOAR', less: 'LESS' }
+        });
+
+        var paragraph = $('#paragraph1 > p');
+        $.celando(paragraph, {
+          length: 200
+        });
+      });
+    </script>
+  </head>
+  <body>
+
+    <div class="list" id="list1">
+      <h1>Lol?</h1>
+
+      <ul>
+        <li>
+          <p>Lolololololol</p>
+        </li>
+      </ul>
+    </div>
+
+    <div class="list" id="list2">
+      <div class="title">
+        <h1>Lol?</h1>
+      </div>
+
+      <ul>
+        <li>
+          <p>Lolololololol</p>
+        </li>
+      </ul>
+    </div>
+
+    <div class="list" id="list3">
+      <h1>Lol?</h1>
+
+      <ul>
+        <li>
+          <p>Lolololololol</p>
+        </li>
+      </ul>
+
+      <a href="#" class="more-less-toggle more-toggle">MOAR</a>
+    </div>
+
+    <div class="paragraph" id="paragraph1">
+      <h1>Lol?</h1>
+      <p>Lolololololol </p>
+    </div>
+  </body>
+</html>
