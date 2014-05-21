@@ -10,9 +10,7 @@ How I use it
 ------------
 Just a look at the [demo](http://mozestudio.github.io/celando/) should be enough for you, my young padawan.
 
-The prototype is `$.celando($target, config)`. `$target` can be a single element (i.e. `p`) or a list of items (i.e. `ul > li`).
-
-`config` is an optional parameter that allows you to give more informations to *Celando* about how and what it has to do.
+The prototype is `$.celando($target, config)`. `$target` can be a single element (i.e. `p`) or a list of items (i.e. `ul > li`). `config` is an optional parameter that allows you to give more informations to *Celando* about how and what it has to do.
 
 `$toggleButton`: The show more/less button element
 
