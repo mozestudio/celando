@@ -56,7 +56,7 @@
       }
     };
 
-    this.animate = function(animationTime, options = {}) {
+    this.animate = function(animationTime, options) {
       var element = $elements.children('.hide').length > 0 ? $elements.not('.hide').first() : $elements.first();
           options = $.extend({ duration: animationTime }, options);
 
@@ -106,7 +106,7 @@
       }
     };
 
-    this.animate = function(animationTime, options = {}) {
+    this.animate = function(animationTime, options) {
       options = $.extend({ duration: animationTime }, options);
 
       $('html, body').animate({
@@ -148,9 +148,9 @@
       config.$toggleButton = $('<a href="#" class="more-less-toggle more-toggle">' + config.label.more + '</a>');
       config.$toggleButton.appendTo(config.$toggleButtonPos);
     }
-
-    var args  = [$target, config.$toggleButton, config.$toggleButtonPos, list ? config.numItems : config.length];
-    var klass = config.adapter === undefined ? (list ? new List(...args) : new Paragraph(...args)) : new adapter(...args);
+    
+    var klass = config.adapter === undefined ? (list ? List : Paragraph) : adapter;
+        klass = new klass($target, config.$toggleButton, config.$toggleButtonPos, list ? config.numItems : config.length)
 
     klass.hide();
     
