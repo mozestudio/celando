@@ -16,7 +16,7 @@
 */
 
 (function($) {
-  function List($elements, $toggleButton, $toggleButtonPos, numItems) {
+  var List = function($container, $elements, $toggleButton, $toggleButtonPos, numItems) {
     var that = this;
 
     this.show = function() {
@@ -33,7 +33,7 @@
         $toggleButton.appendTo($toggleButtonPos);
     };
 
-    this.toggle = function(label, animation, animationTime) {
+    this.toggle = function(label, animation, animationTime, onToggle) {
       if($elements.hasClass('hide')) {
         that.show();
 
@@ -56,17 +56,47 @@
       }
     };
 
-    this.animate = function(animationTime, options) {
-      var element = $elements.children('.hide').length > 0 ? $elements.not('.hide').first() : $elements.first();
-          options = $.extend({ duration: animationTime }, options);
+    this.animate = function(duration, options) {
+      var $target = $container.children('.hide').length > 0 ? $container.not('.hide').first() : $elements.first();
+      options = $.extend({ duration: duration }, options);
 
       $('html, body').animate({
-        scrollTop: element.offset().top
+        scrollTop: $target.offset().top
       }, options);
     };
   };
 
-  function Paragraph($paragraph, $toggleButton, $toggleButtonPos, length) {
+  var LazyList = function($container, $elements, $toggleButton, $toggleButtonPos, numItems) {
+    var that = this;
+
+    this.show = function() { };
+
+    this.hide = function() { };
+
+    this.toggle = function(label, animation, animationTime, onToggle) {
+      if($toggleButtonPos !== undefined)
+        $toggleButton.appendTo($('body'));
+
+      onToggle(function() {
+        if($toggleButtonPos !== undefined)
+          $toggleButton.appendTo($toggleButtonPos);
+
+        if(animation)
+          that.animate(animationTime);
+      });
+    };
+
+    this.animate = function(duration, options) {
+      var $target = $container.children(':last');
+      options = $.extend({ duration: duration }, options);
+
+      $('html, body').animate({
+        scrollTop: $target.offset().top
+      }, options);
+    };
+  };
+
+  var Paragraph = function($container, $paragraph, $toggleButton, $toggleButtonPos, length) {
     var that = this;
 
     this.show = function() {
@@ -83,7 +113,7 @@
       $toggleButton.appendTo($toggleButtonPos);
     };
 
-    this.toggle = function(label, animation, animationTime) {
+    this.toggle = function(label, animation, animationTime, onToggle) {
       if($paragraph.children('p.hide').length > 0) {
         that.show();
 
@@ -106,8 +136,8 @@
       }
     };
 
-    this.animate = function(animationTime, options) {
-      options = $.extend({ duration: animationTime }, options);
+    this.animate = function(duration, options) {
+      options = $.extend({ duration: duration }, options);
 
       $('html, body').animate({
         scrollTop: $paragraph.offset().top
@@ -121,6 +151,7 @@
 
   $.celando = function($target, options) {
     var defaults = {
+      $container:       undefined,
       $toggleButton:    undefined,
       $toggleButtonPos: undefined,
       length:           300,
@@ -129,6 +160,9 @@
       animationTime:    500,
       adapter:          undefined,
       force:            false,
+      onToggle:         undefined,
+      callback:         undefined,
+      lazy:             false,
       label: {
         more: 'More',
         less: 'Less'
@@ -138,7 +172,7 @@
     var config = $.extend(defaults, options);
     var list   = isList($target);   
     
-    if(config.force === false && list && $target.length <= config.numItems)
+    if(config.lazy === false && config.force === false && list && $target.length <= config.numItems)
       return;
 
     if(config.$toggleButton === undefined) {
@@ -148,16 +182,22 @@
       config.$toggleButton = $('<a href="#" class="more-less-toggle more-toggle">' + config.label.more + '</a>');
       config.$toggleButton.appendTo(config.$toggleButtonPos);
     }
+
+    if(config.$container === undefined)
+      config.$container = $target.parent();
     
-    var klass = config.adapter === undefined ? (list ? List : Paragraph) : adapter;
-        klass = new klass($target, config.$toggleButton, config.$toggleButtonPos, list ? config.numItems : config.length)
+    var klass = config.adapter === undefined ? (config.lazy === true ? LazyList : (list ? List : Paragraph)) : config.adapter;
+        klass = new klass(config.$container, $target, config.$toggleButton, config.$toggleButtonPos, list ? config.numItems : config.length)
 
     klass.hide();
     
     config.$toggleButton.on('click', function(e) {
       e.preventDefault();
 
-      klass.toggle(config.label, config.animation, config.animationTime);
+      klass.toggle(config.label, config.animation, config.animationTime, config.onToggle);
     });
+
+    if(config.callback !== undefined)
+      config.callback(klass, config);
   };
 })(jQuery);
