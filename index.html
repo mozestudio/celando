@@ -35,6 +35,11 @@
         display: none;
       }
 
+      .loader {
+        display: block;
+        text-align: center;
+      }
+
       #list3 a {
         float: left;
         background-image: -webkit-linear-gradient(bottom, red 0%, rgba(255, 255, 255, 0) 100%);
@@ -50,7 +55,7 @@
       .list, .paragraph {
         float: left;
         border: 1px solid black;
-        width: 300px;
+        width: 250px;
         min-height: 180px;
         padding: 5px;
         margin-right: 10px;
@@ -59,7 +64,7 @@
     </style>
     <script>
       function initExamples() {
-        var li = $('.list > ul');
+        var li = $('#list1 > ul');
         var t  = li.html();
         for(var i = 0; i < 100; ++i)
           $('ul').append(t);
@@ -86,6 +91,33 @@
         $.celando(list, {
           $toggleButton: $('#list3 > .more-toggle'),
           label: { more: 'MOAR', less: 'LESS' }
+        });
+
+        list = $('#list4 > ul').children('li');
+        $.celando(list, {
+          lazy: true,
+          callback: function(klass, config) {
+            $('#list4 > ul > .more-toggle').hide();
+            
+            $(window).scroll(function() {
+              if($(document).height() <= $(window).scrollTop() + $(window).height()) {
+                klass.toggle(config.label, config.animation, config.animationTime, config.onToggle);
+              }
+            });
+          },
+          onToggle: function(animation) {
+            $('#list4').append('<span class="loader">WAIT</span>');
+
+            setTimeout(function() {
+              var li = $('#list1 > ul > li:first');
+              $('#list4 > ul').append(li);
+
+              $('#list4 > .loader').hide();
+
+              if(animation !== undefined)
+                animation();
+            }, 3000);
+          }
         });
 
         var paragraph = $('#paragraph1 > p');
@@ -129,6 +161,16 @@
       </ul>
 
       <a href="#" class="more-less-toggle more-toggle">MOAR</a>
+    </div>
+
+    <div class="list" id="list4">
+      <h1>Lol?</h1>
+
+      <ul>
+        <li>
+          <p>Lolololololol</p>
+        </li>
+      </ul>
     </div>
 
     <div class="paragraph" id="paragraph1">
