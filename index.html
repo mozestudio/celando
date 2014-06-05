@@ -110,9 +110,10 @@
             $('#list4').append('<span class="loader">LOADING</span>');
 
             setTimeout(function() {
+              $('#list4 > ul').append('<hr>');
+              
               for(var i = 0; i < 10; ++i)
                 $('#list4 > ul').append('<li><p>Lolololololol</p></li>');
-              $('#list4 > ul').append('<hr>');
 
               $('#list4 > .loader').hide();
 
