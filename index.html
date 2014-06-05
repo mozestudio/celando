@@ -94,29 +94,33 @@
         });
 
         list = $('#list4 > ul').children('li');
+        var busy = false;
         $.celando(list, {
           lazy: true,
           callback: function(klass, config) {
             $('#list4 > ul > .more-toggle').hide();
             
             $(window).scroll(function() {
-              if($(document).height() <= $(window).scrollTop() + $(window).height()) {
+              if(!busy && $(document).height() <= $(window).scrollTop() + $(window).height())
                 klass.toggle(config.label, config.animation, config.animationTime, config.onToggle);
-              }
             });
           },
           onToggle: function(animation) {
-            $('#list4').append('<span class="loader">WAIT</span>');
+            busy = true;
+            $('#list4').append('<span class="loader">LOADING</span>');
 
             setTimeout(function() {
-              var li = $('#list1 > ul > li:first');
-              $('#list4 > ul').append(li);
+              for(var i = 0; i < 10; ++i)
+                $('#list4 > ul').append('<li><p>Lolololololol</p></li>');
+              $('#list4 > ul').append('<hr>');
 
               $('#list4 > .loader').hide();
 
               if(animation !== undefined)
                 animation();
-            }, 3000);
+
+              busy = false
+            }, 1000);
           }
         });
 
