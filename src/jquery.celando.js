@@ -172,8 +172,11 @@
     var config = $.extend(defaults, options);
     var list   = isList($target);   
     
-    if(config.lazy === false && config.force === false && list && $target.length <= config.numItems)
+    if(config.lazy === false && config.force === false && list && $target.length <= config.numItems) {
+      if(config.$toggleButton !== undefined)
+        config.$toggleButton.hide();
       return;
+    }
 
     if(config.$toggleButton === undefined) {
       if(config.$toggleButtonPos === undefined)
